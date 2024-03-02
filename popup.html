@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+   body {
+      width: 250px;
+      height: 200px;
+      margin: 0;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+    }
+
+    #overlay {
+      display: none;
+      position: fixed;
+      background-color: #ffffff;
+      padding: 10px;
+      border: 2px solid #000000;
+      border-radius: 5px;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <div id="overlay">Hex Code</div>
+  <script>
+    document.addEventListener("mouseover", function (e) {
+      var target = e.target;
+      var color = window.getComputedStyle(target).getPropertyValue("color");
+      var backgroundColor = window.getComputedStyle(target).getPropertyValue("background-color");
+
+      // Get the hex codes
+      var textColorHex = rgbToHex(color);
+      var bgColorHex = rgbToHex(backgroundColor);
+
+      // Show overlay with hex codes
+      showOverlay(e.clientX, e.clientY, textColorHex, bgColorHex);
+    });
+
+    document.addEventListener("mouseout", function () {
+      // Hide overlay when mouse leaves the element
+      hideOverlay();
+    });
+
+    function showOverlay(x, y, textColorHex, bgColorHex) {
+      var overlay = document.getElementById("overlay");
+      overlay.innerHTML = `Text color: ${textColorHex}<br>Background color: ${bgColorHex}`;
+      overlay.style.left = x + "px";
+      overlay.style.top = y + "px";
+      overlay.style.display = "block";
+    }
+
+    function hideOverlay() {
+      var overlay = document.getElementById("overlay");
+      overlay.style.display = "none";
+    }
+
+   
+
+    function rgbToHex(color) {
+    // Convert RGB/RGBA to six-digit hex code
+    var hexRegex = /(rgba?)\((\d+), (\d+), (\d+)(, ([\d.]+))?\)/;
+    var match = color.match(hexRegex);
+
+    if (match) {
+      var isRGBA = match[1].toLowerCase() === 'rgba';
+      var r = parseInt(match[2], 10).toString(16).padStart(2, '0');
+      var g = parseInt(match[3], 10).toString(16).padStart(2, '0');
+      var b = parseInt(match[4], 10).toString(16).padStart(2, '0');
+
+      if (isRGBA) {
+        // Handle alpha for RGBA
+        var alpha = parseFloat(match[6]) || 1;
+        var alphaHex = Math.round(alpha * 255).toString(16).padStart(2, '0');
+        return `#${r}${g}${b}${alphaHex}`;
+      }
+
+      return `#${r}${g}${b}`;
+    }
+
+  // ... Other code ...
+</script>
+
+  </script>
+</body>
+</html>
